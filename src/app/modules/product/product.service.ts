@@ -1,7 +1,7 @@
 import { Product } from './product.model';
 
-const getAllProductsFromDB = async () => {
-  const result = await Product.find();
+const getAllProductsFromDB = async (filter: Record<string, unknown>) => {
+  const result = await Product.find(filter);
   return result;
 };
 

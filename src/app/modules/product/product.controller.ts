@@ -3,7 +3,34 @@ import { ProductService } from './product.service';
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductService.getAllProductsFromDB();
+    const { searchTerm } = req.query;
+    // eslint-disable-next-line prefer-const
+    let filter: Record<string, unknown> = {};
+
+    if (searchTerm) {
+      filter.$or = [
+        {
+          name: { $regex: searchTerm, $options: 'i' },
+        },
+        {
+          description: { $regex: searchTerm, $options: 'i' },
+        },
+        {
+          category: { $regex: searchTerm, $options: 'i' },
+        },
+        {
+          tags: { $in: [searchTerm] },
+        },
+        {
+          'variants.type': { $regex: searchTerm, $options: 'i' },
+        },
+        {
+          'variants.value': { $regex: searchTerm, $options: 'i' },
+        },
+      ];
+    }
+
+    const result = await ProductService.getAllProductsFromDB(filter);
     res.status(200).json({
       success: true,
       message: 'Products fetched successfully',
