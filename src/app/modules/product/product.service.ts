@@ -16,8 +16,17 @@ const createProductIntoDB = async (payload: IProduct) => {
   return result;
 };
 
+const updateProductIntoDB = async (id: string, payload: IProduct) => {
+  const result = await Product.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+    upsert: true,
+  });
+  return result;
+};
+
 export const ProductService = {
   getAllProductsFromDB,
   getSingleProductFromDB,
   createProductIntoDB,
+  updateProductIntoDB,
 };
