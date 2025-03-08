@@ -18,4 +18,5 @@ export const productValidation = Joi.object({
     quantity: Joi.number().required(),
     isStock: Joi.boolean().required(),
   }).required(),
+  isDeleted: Joi.boolean().optional(),
 });

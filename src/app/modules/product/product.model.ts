@@ -17,6 +17,19 @@ const productSchema = new Schema<IProduct>({
     quantity: { type: Number },
     isStock: { type: Boolean },
   }),
+  isDeleted: { type: Boolean, default: false },
+});
+
+// Query Middleware
+productSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+
+  next();
+});
+productSchema.pre('findOne', function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+
+  next();
 });
 
 // Create a model using the schema
