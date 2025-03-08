@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ProductService } from './product.service';
+import { productValidation } from './product.validation';
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -67,7 +68,39 @@ const getSingleProduct = async (req: Request, res: Response) => {
   }
 };
 
+const createProduct = async (req: Request, res: Response) => {
+  try {
+    const productData = req.body;
+
+    const { error, value } = productValidation.validate(productData);
+    if (error) {
+      res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: error.details[0].message,
+      });
+      return;
+    }
+
+    const result = await ProductService.createProductIntoDB(value);
+    res.status(201).json({
+      success: true,
+      message: 'Product created successfully',
+      data: result,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      error,
+    });
+  }
+};
+
 export const ProductController = {
   getAllProducts,
   getSingleProduct,
+  createProduct,
 };

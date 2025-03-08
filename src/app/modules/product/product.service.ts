@@ -1,3 +1,4 @@
+import { IProduct } from './product.interface';
 import { Product } from './product.model';
 
 const getAllProductsFromDB = async (filter: Record<string, unknown>) => {
@@ -10,7 +11,13 @@ const getSingleProductFromDB = async (id: string) => {
   return result;
 };
 
+const createProductIntoDB = async (payload: IProduct) => {
+  const result = await Product.create(payload);
+  return result;
+};
+
 export const ProductService = {
   getAllProductsFromDB,
   getSingleProductFromDB,
+  createProductIntoDB,
 };
